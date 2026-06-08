@@ -15,6 +15,157 @@
     "ru": "Русский",
     "en": "English"
   },
+  "account": {
+    "signIn": "Войти",
+    "cabinet": "Личный кабинет",
+    "admin": "Админка",
+    "signOut": "Выйти",
+    "menu": "Меню аккаунта"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Вход",
+      "subtitle": "Войдите в личный кабинет",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Войти",
+      "submitting": "Входим…",
+      "noAccount": "Нет аккаунта?",
+      "signUpLink": "Зарегистрироваться"
+    },
+    "signUp": {
+      "title": "Регистрация",
+      "subtitle": "Создайте аккаунт клиента",
+      "name": "Имя",
+      "email": "Email",
+      "password": "Пароль",
+      "submit": "Создать аккаунт",
+      "submitting": "Создаём…",
+      "hasAccount": "Уже есть аккаунт?",
+      "signInLink": "Войти"
+    },
+    "errors": {
+      "email_invalid": "Введите корректный email",
+      "password_required": "Введите пароль",
+      "password_min": "Минимум 8 символов",
+      "password_max": "Слишком длинный пароль",
+      "name_min": "Минимум 2 символа",
+      "name_max": "Слишком длинно",
+      "invalid_credentials": "Неверный email или пароль",
+      "email_taken": "Этот email уже зарегистрирован",
+      "server": "Что-то пошло не так. Попробуйте ещё раз."
+    }
+  },
+  "cabinet": {
+    "title": "Личный кабинет",
+    "greeting": "Здравствуйте, {name}",
+    "subtitle": "Ваши заявки и их статусы",
+    "empty": "У вас пока нет заявок.",
+    "emptyCta": "Оставить заявку",
+    "noService": "Без услуги",
+    "created": "Создана",
+    "managerComment": "Комментарий менеджера",
+    "history": "История статусов"
+  },
+  "status": {
+    "NEW": "Новая",
+    "IN_PROGRESS": "В работе",
+    "DONE": "Выполнена",
+    "REJECTED": "Отклонена"
+  },
+  "admin": {
+    "title": "Администрирование",
+    "nav": {
+      "dashboard": "Сводка",
+      "applications": "Заявки",
+      "services": "Услуги",
+      "portfolio": "Портфолио",
+      "blog": "Блог"
+    },
+    "dashboard": {
+      "title": "Сводка",
+      "byStatus": "Заявки по статусам",
+      "totalApplications": "Всего заявок",
+      "services": "Услуги",
+      "portfolio": "Кейсы портфолио",
+      "blog": "Публикации блога"
+    },
+    "applications": {
+      "title": "Заявки",
+      "subtitle": "Все клиентские заявки",
+      "empty": "Заявок пока нет.",
+      "client": "Клиент",
+      "service": "Услуга",
+      "status": "Статус",
+      "created": "Создана",
+      "manage": "Открыть",
+      "noService": "—",
+      "registered": "зарегистрирован",
+      "anonymous": "гость",
+      "detailTitle": "Заявка",
+      "contact": "Контактные данные",
+      "message": "Сообщение",
+      "manager": "Менеджер",
+      "unassigned": "не назначен",
+      "history": "История статусов",
+      "changeStatus": "Изменить статус",
+      "newStatus": "Новый статус",
+      "comment": "Комментарий",
+      "commentPlaceholder": "Комментарий для клиента (необязательно)",
+      "save": "Сохранить",
+      "saving": "Сохраняем…",
+      "back": "Ко всем заявкам"
+    },
+    "form": {
+      "creating": "Создаём…",
+      "saving": "Сохраняем…",
+      "save": "Сохранить",
+      "create": "Создать",
+      "cancel": "Отмена",
+      "delete": "Удалить",
+      "new": "Добавить",
+      "editTitle": "Редактирование",
+      "newTitle": "Новая запись",
+      "actions": "Действия"
+    },
+    "services": {
+      "title": "Услуги",
+      "slug": "Slug",
+      "name": "Название",
+      "shortDescription": "Краткое описание",
+      "fullDescription": "Полное описание",
+      "iconKey": "Иконка (ключ)",
+      "priceFrom": "Цена от",
+      "order": "Порядок",
+      "isActive": "Активна"
+    },
+    "portfolio": {
+      "title": "Портфолио",
+      "slug": "Slug",
+      "name": "Название",
+      "summary": "Краткое описание",
+      "description": "Описание",
+      "clientName": "Клиент",
+      "projectUrl": "Ссылка на проект",
+      "technologies": "Технологии (через запятую)",
+      "completedAt": "Дата завершения",
+      "order": "Порядок",
+      "isPublished": "Опубликовано"
+    },
+    "blog": {
+      "title": "Блог",
+      "slug": "Slug",
+      "name": "Заголовок",
+      "excerpt": "Анонс",
+      "content": "Содержание",
+      "tags": "Теги (через запятую)",
+      "publishedAt": "Дата публикации"
+    },
+    "errors": {
+      "slug_taken": "Этот slug уже занят",
+      "invalid": "Проверьте поля формы"
+    }
+  },
   "hero": {
     "badge": "принимаем новые проекты",
     "eyebrow": "Цифровое агентство полного цикла",

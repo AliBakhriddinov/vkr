@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { applicationSchema } from "@/lib/validations/application";
 import { ApplicationStatus } from "@/generated/prisma/enums";
@@ -21,6 +22,7 @@ export async function POST(request: Request) {
   }
 
   const data = parsed.data;
+  const session = await auth();
   const emptyToNull = (v?: string) => (v && v.length > 0 ? v : null);
 
   // Привязываем услугу только если такой id реально есть в каталоге.
@@ -43,6 +45,7 @@ export async function POST(request: Request) {
         message: data.message,
         budgetRange: data.budgetRange ? data.budgetRange : null,
         serviceId,
+        userId: session?.user?.id ?? null,
         status: ApplicationStatus.NEW,
       },
       select: { id: true },

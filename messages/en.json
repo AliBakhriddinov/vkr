@@ -15,6 +15,157 @@
     "ru": "Русский",
     "en": "English"
   },
+  "account": {
+    "signIn": "Sign in",
+    "cabinet": "Cabinet",
+    "admin": "Admin",
+    "signOut": "Sign out",
+    "menu": "Account menu"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign in",
+      "subtitle": "Access your personal cabinet",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "noAccount": "No account?",
+      "signUpLink": "Create one"
+    },
+    "signUp": {
+      "title": "Sign up",
+      "subtitle": "Create a client account",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "hasAccount": "Already have an account?",
+      "signInLink": "Sign in"
+    },
+    "errors": {
+      "email_invalid": "Enter a valid email",
+      "password_required": "Enter your password",
+      "password_min": "At least 8 characters",
+      "password_max": "Password too long",
+      "name_min": "At least 2 characters",
+      "name_max": "Too long",
+      "invalid_credentials": "Invalid email or password",
+      "email_taken": "This email is already registered",
+      "server": "Something went wrong. Please try again."
+    }
+  },
+  "cabinet": {
+    "title": "Personal cabinet",
+    "greeting": "Hello, {name}",
+    "subtitle": "Your requests and their statuses",
+    "empty": "You don't have any requests yet.",
+    "emptyCta": "Submit a request",
+    "noService": "No service",
+    "created": "Created",
+    "managerComment": "Manager comment",
+    "history": "Status history"
+  },
+  "status": {
+    "NEW": "New",
+    "IN_PROGRESS": "In progress",
+    "DONE": "Done",
+    "REJECTED": "Rejected"
+  },
+  "admin": {
+    "title": "Administration",
+    "nav": {
+      "dashboard": "Overview",
+      "applications": "Requests",
+      "services": "Services",
+      "portfolio": "Portfolio",
+      "blog": "Blog"
+    },
+    "dashboard": {
+      "title": "Overview",
+      "byStatus": "Requests by status",
+      "totalApplications": "Total requests",
+      "services": "Services",
+      "portfolio": "Portfolio cases",
+      "blog": "Blog posts"
+    },
+    "applications": {
+      "title": "Requests",
+      "subtitle": "All client requests",
+      "empty": "No requests yet.",
+      "client": "Client",
+      "service": "Service",
+      "status": "Status",
+      "created": "Created",
+      "manage": "Open",
+      "noService": "—",
+      "registered": "registered",
+      "anonymous": "guest",
+      "detailTitle": "Request",
+      "contact": "Contact details",
+      "message": "Message",
+      "manager": "Manager",
+      "unassigned": "unassigned",
+      "history": "Status history",
+      "changeStatus": "Change status",
+      "newStatus": "New status",
+      "comment": "Comment",
+      "commentPlaceholder": "Comment for the client (optional)",
+      "save": "Save",
+      "saving": "Saving…",
+      "back": "Back to all requests"
+    },
+    "form": {
+      "creating": "Creating…",
+      "saving": "Saving…",
+      "save": "Save",
+      "create": "Create",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "new": "Add",
+      "editTitle": "Edit",
+      "newTitle": "New entry",
+      "actions": "Actions"
+    },
+    "services": {
+      "title": "Services",
+      "slug": "Slug",
+      "name": "Title",
+      "shortDescription": "Short description",
+      "fullDescription": "Full description",
+      "iconKey": "Icon (key)",
+      "priceFrom": "Price from",
+      "order": "Order",
+      "isActive": "Active"
+    },
+    "portfolio": {
+      "title": "Portfolio",
+      "slug": "Slug",
+      "name": "Title",
+      "summary": "Summary",
+      "description": "Description",
+      "clientName": "Client",
+      "projectUrl": "Project URL",
+      "technologies": "Technologies (comma-separated)",
+      "completedAt": "Completion date",
+      "order": "Order",
+      "isPublished": "Published"
+    },
+    "blog": {
+      "title": "Blog",
+      "slug": "Slug",
+      "name": "Title",
+      "excerpt": "Excerpt",
+      "content": "Content",
+      "tags": "Tags (comma-separated)",
+      "publishedAt": "Publish date"
+    },
+    "errors": {
+      "slug_taken": "This slug is already taken",
+      "invalid": "Check the form fields"
+    }
+  },
   "hero": {
     "badge": "accepting new projects",
     "eyebrow": "Full-cycle digital agency",

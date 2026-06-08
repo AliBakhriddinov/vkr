@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { AccountMenu } from "@/components/auth/account-menu";
 
 const NAV_ITEMS = [
   { key: "services", href: "#services" },
@@ -57,6 +58,7 @@ export function Header() {
         <div className="flex items-center gap-1">
           <LocaleSwitcher />
           <ThemeToggle />
+          <AccountMenu />
           <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
             <a href="#contacts">{t("cta")}</a>
           </Button>
