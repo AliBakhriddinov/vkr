@@ -1,9 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { DeleteWithUndo } from "@/components/admin/delete-with-undo";
 import { deleteBlog } from "@/lib/actions/blog";
 
 export default async function AdminBlogPage({
@@ -13,6 +15,7 @@ export default async function AdminBlogPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  await requireRole(locale, ["ADMIN"]);
   const t = await getTranslations("admin.blog");
   const tf = await getTranslations("admin.form");
 
@@ -59,17 +62,10 @@ export default async function AdminBlogPage({
                         <Pencil className="size-4" />
                       </Link>
                     </Button>
-                    <form action={deleteBlog.bind(null, locale, p.id)}>
-                      <Button
-                        type="submit"
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive hover:text-destructive"
-                        aria-label="delete"
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </form>
+                    <DeleteWithUndo
+                      action={deleteBlog.bind(null, locale, p.id)}
+                      name={p.title}
+                    />
                   </div>
                 </td>
               </tr>

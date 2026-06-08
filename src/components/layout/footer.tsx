@@ -1,4 +1,4 @@
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
 
@@ -6,13 +6,15 @@ const NAV_ITEMS = [
   { key: "services", href: "#services" },
   { key: "cases", href: "#cases" },
   { key: "process", href: "#process" },
-  { key: "about", href: "#about" },
+  { key: "testimonials", href: "#testimonials" },
+  { key: "blog", href: "/blog" },
   { key: "contacts", href: "#contacts" },
 ] as const;
 
 export function Footer() {
   const t = useTranslations("nav");
   const tf = useTranslations("footer");
+  const locale = useLocale();
   const year = 2026;
 
   return (
@@ -34,12 +36,21 @@ export function Footer() {
           <ul className="mt-4 space-y-3">
             {NAV_ITEMS.map((item) => (
               <li key={item.key}>
-                <a
-                  href={item.href}
-                  className="text-sm text-foreground/80 transition-colors hover:text-primary"
-                >
-                  {t(item.key)}
-                </a>
+                {item.href.startsWith("#") ? (
+                  <a
+                    href={`/${locale}${item.href}`}
+                    className="text-sm text-foreground/80 transition-colors hover:text-primary"
+                  >
+                    {t(item.key)}
+                  </a>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="text-sm text-foreground/80 transition-colors hover:text-primary"
+                  >
+                    {t(item.key)}
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

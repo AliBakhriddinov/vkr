@@ -1,17 +1,26 @@
-import { useTranslations } from "next-intl";
-import { Quote } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-import { Reveal, RevealStagger, RevealItem } from "@/components/motion/reveal";
+import { prisma } from "@/lib/prisma";
+import { Reveal } from "@/components/motion/reveal";
+import { TestimonialSlider } from "@/components/testimonial-slider";
 
-type Item = { quote: string; name: string; role: string };
+export async function Testimonials() {
+  const t = await getTranslations("testimonials");
+  const items = await prisma.testimonial.findMany({
+    where: { isPublished: true },
+    orderBy: { order: "asc" },
+    take: 15,
+    select: { id: true, quote: true, authorName: true, authorRole: true },
+  });
 
-export function Testimonials() {
-  const t = useTranslations("testimonials");
-  const items = t.raw("items") as Item[];
+  if (items.length === 0) return null;
 
   return (
-    <section className="relative border-t border-border py-24">
-      <div className="mx-auto max-w-7xl px-6">
+    <section
+      id="testimonials"
+      className="relative border-t border-border py-24"
+    >
+      <div className="mx-auto max-w-4xl px-6">
         <Reveal>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-primary">
             {t("eyebrow")}
@@ -21,22 +30,7 @@ export function Testimonials() {
           </h2>
         </Reveal>
 
-        <RevealStagger delay={0.1} className="mt-14 grid gap-6 md:grid-cols-2">
-          {items.map((item, i) => (
-            <RevealItem key={i}>
-              <figure className="flex h-full flex-col rounded-xl border border-border bg-card p-8">
-                <Quote className="size-8 text-primary/30" />
-                <blockquote className="mt-4 flex-1 text-lg leading-relaxed">
-                  {item.quote}
-                </blockquote>
-                <figcaption className="mt-6 border-t border-border pt-4">
-                  <p className="font-semibold">{item.name}</p>
-                  <p className="text-sm text-muted-foreground">{item.role}</p>
-                </figcaption>
-              </figure>
-            </RevealItem>
-          ))}
-        </RevealStagger>
+        <TestimonialSlider items={items} />
       </div>
     </section>
   );

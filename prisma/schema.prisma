@@ -36,6 +36,9 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  seenApplicationIds String[] @default([])
+  seenTestimonialIds String[] @default([])
+
   applications         Application[]             @relation("ClientApplications")
   assignedApplications Application[]             @relation("ManagerAssignments")
   statusChanges        ApplicationStatusChange[]
@@ -48,8 +51,11 @@ model Service {
   id               String   @id @default(cuid())
   slug             String   @unique
   title            String
+  titleEn          String?
   shortDescription String
+  shortDescriptionEn String?
   fullDescription  String
+  fullDescriptionEn String?
   iconKey          String?
   priceFrom        Int?
   order            Int      @default(0)
@@ -109,10 +115,14 @@ model PortfolioItem {
   id            String    @id @default(cuid())
   slug          String    @unique
   title         String
+  titleEn       String?
   summary       String
+  summaryEn     String?
   description   String
+  descriptionEn String?
   coverImageUrl String?
   clientName    String?
+  clientNameEn  String?
   projectUrl    String?
   technologies  String[]
   completedAt   DateTime?
@@ -128,8 +138,11 @@ model BlogPost {
   id            String    @id @default(cuid())
   slug          String    @unique
   title         String
+  titleEn       String?
   excerpt       String
+  excerptEn     String?
   content       String
+  contentEn     String?
   coverImageUrl String?
   tags          String[]
   publishedAt   DateTime?
@@ -141,4 +154,20 @@ model BlogPost {
 
   @@index([publishedAt])
   @@index([authorId])
+}
+
+model Testimonial {
+  id          String   @id @default(cuid())
+  quote       String
+  quoteEn     String?
+  authorName  String
+  authorNameEn String?
+  authorRole  String
+  authorRoleEn String?
+  order       Int      @default(0)
+  isPublished Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isPublished, order])
 }

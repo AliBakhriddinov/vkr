@@ -5,6 +5,8 @@
     "process": "Process",
     "about": "About",
     "contacts": "Contacts",
+    "testimonials": "Testimonials",
+    "blog": "Blog",
     "cta": "Start a project"
   },
   "theme": {
@@ -64,8 +66,18 @@
     "emptyCta": "Submit a request",
     "noService": "No service",
     "created": "Created",
-    "managerComment": "Manager comment",
+    "managerComment": "Comment",
     "history": "Status history"
+  },
+  "review": {
+    "title": "Leave a review",
+    "lead": "Share your experience.",
+    "quote": "Your review",
+    "role": "Role and company",
+    "rolePlaceholder": "e.g. CEO, Company",
+    "submit": "Submit review",
+    "submitting": "Submitting…",
+    "thanks": "Thank you! Your review was submitted."
   },
   "status": {
     "NEW": "New",
@@ -80,7 +92,8 @@
       "applications": "Requests",
       "services": "Services",
       "portfolio": "Portfolio",
-      "blog": "Blog"
+      "blog": "Blog",
+      "testimonials": "Testimonials"
     },
     "dashboard": {
       "title": "Overview",
@@ -102,10 +115,11 @@
       "noService": "—",
       "registered": "registered",
       "anonymous": "guest",
+      "unseen": "Not opened yet",
       "detailTitle": "Request",
       "contact": "Contact details",
       "message": "Message",
-      "manager": "Manager",
+      "manager": "Assigned to",
       "unassigned": "unassigned",
       "history": "Status history",
       "changeStatus": "Change status",
@@ -126,7 +140,20 @@
       "new": "Add",
       "editTitle": "Edit",
       "newTitle": "New entry",
-      "actions": "Actions"
+      "actions": "Actions",
+      "slugHint": "Latin, digits, hyphen — e.g. web-development",
+      "orderHint": "Lower number shows higher",
+      "activeHint": "Visible on the site",
+      "optional": "optional",
+      "saved": "Saved"
+    },
+    "confirmDelete": {
+      "title": "Delete",
+      "message": "Delete \"{name}\"? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "done": "\"{name}\" deleted",
+      "undo": "Undo"
     },
     "services": {
       "title": "Services",
@@ -161,13 +188,42 @@
       "tags": "Tags (comma-separated)",
       "publishedAt": "Publish date"
     },
+    "testimonials": {
+      "title": "Testimonials",
+      "quote": "Quote",
+      "authorName": "Name",
+      "authorRole": "Role",
+      "order": "Order",
+      "isPublished": "Published",
+      "status": "Status",
+      "statusPublished": "In carousel",
+      "statusPending": "Pending review",
+      "unseen": "Not viewed yet",
+      "view": "View",
+      "addToCarousel": "Add to carousel",
+      "removeFromCarousel": "Remove",
+      "addedToCarousel": "Added to carousel",
+      "removedFromCarousel": "Removed from carousel",
+      "adminHint": "Client reviews arrive for moderation. Mark \"Add to carousel\" to show them on the homepage (up to 15)."
+    },
     "errors": {
       "slug_taken": "This slug is already taken",
-      "invalid": "Check the form fields"
+      "invalid": "Check the form fields",
+      "required": "Please fill in this field",
+      "slug_format": "Latin letters, digits and hyphens only"
+    },
+    "icons": {
+      "none": "Default",
+      "code": "Code",
+      "smartphone": "Smartphone",
+      "palette": "Palette",
+      "trending-up": "Growth",
+      "megaphone": "Megaphone",
+      "wrench": "Support"
     }
   },
   "hero": {
-    "badge": "accepting new projects",
+    "badge": "Accepting new projects",
     "eyebrow": "Full-cycle digital agency",
     "titleMain": "Websites and products that",
     "titleAccent": "bring you clients",
@@ -226,18 +282,38 @@
   "testimonials": {
     "eyebrow": "04 — Testimonials",
     "title": "What clients say",
-    "items": [
-      {
-        "quote": "PixelWave relaunched our online store and conversion grew 38% in a quarter. Transparent work, delivered on time.",
-        "name": "Elena Vorontsova",
-        "role": "CMO, Severny Put"
-      },
-      {
-        "quote": "They built a corporate portal with a client cabinet. The code and documentation quality stand out — easy to maintain.",
-        "name": "Dmitry Lazarev",
-        "role": "CTO, Delta Lab"
-      }
-    ]
+    "prev": "Previous testimonial",
+    "next": "Next testimonial",
+    "goTo": "Testimonial {n}"
+  },
+  "servicePage": {
+    "back": "All services",
+    "priceFrom": "Price from",
+    "cta": "Discuss a project"
+  },
+  "casePage": {
+    "back": "All cases",
+    "client": "Client",
+    "completed": "Completed",
+    "tech": "Technologies",
+    "visit": "Open project",
+    "cta": "I want the same"
+  },
+  "blog": {
+    "title": "Blog",
+    "lead": "Articles on development, design and project management.",
+    "back": "All articles",
+    "readMore": "Read",
+    "empty": "No posts yet."
+  },
+  "errorPage": {
+    "notFoundTitle": "Page not found",
+    "notFoundText": "The link may be outdated, or the page has moved.",
+    "errorTitle": "Something went wrong",
+    "errorText": "An error occurred. Please try refreshing the page.",
+    "home": "Back home",
+    "retry": "Try again",
+    "blog": "Blog"
   },
   "contact": {
     "eyebrow": "05 — Contacts",
@@ -284,6 +360,7 @@
       "name_max": "Too long",
       "email_invalid": "Enter a valid email",
       "phone_max": "Phone number too long",
+      "phone_invalid": "Enter a valid phone number",
       "company_max": "Too long",
       "message_min": "At least 10 characters",
       "message_max": "Message too long"

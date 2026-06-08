@@ -13,7 +13,10 @@ export default auth((req) => {
   const localeRe = new RegExp(`^/(${routing.locales.join("|")})(?=/|$)`);
   const localeMatch = nextUrl.pathname.match(localeRe);
   const locale = localeMatch ? localeMatch[1] : routing.defaultLocale;
-  const path = (nextUrl.pathname.replace(localeRe, "") || "/").replace(/\/{2,}/g, "/");
+  const path = (nextUrl.pathname.replace(localeRe, "") || "/").replace(
+    /\/{2,}/g,
+    "/",
+  );
 
   const isCabinet = /^\/cabinet(\/|$)/.test(path);
   const isAdmin = /^\/admin(\/|$)/.test(path);
@@ -25,7 +28,7 @@ export default auth((req) => {
     return NextResponse.redirect(url);
   }
 
-  if (isAdmin && role !== "MANAGER" && role !== "ADMIN") {
+  if (isAdmin && role !== "ADMIN") {
     return NextResponse.redirect(new URL(`/${locale}`, nextUrl));
   }
 

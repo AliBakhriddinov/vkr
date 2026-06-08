@@ -25,13 +25,17 @@ export default async function EditServicePage({
       </h1>
       <ServiceForm
         action={updateService.bind(null, locale, id)}
+        listHref="/admin/services"
         submitLabel={tf("save")}
         pendingLabel={tf("saving")}
         initial={{
           slug: service.slug,
           title: service.title,
+          titleEn: service.titleEn,
           shortDescription: service.shortDescription,
+          shortDescriptionEn: service.shortDescriptionEn,
           fullDescription: service.fullDescription,
+          fullDescriptionEn: service.fullDescriptionEn,
           iconKey: service.iconKey,
           priceFrom: service.priceFrom,
           order: service.order,

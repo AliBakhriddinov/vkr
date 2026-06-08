@@ -1,11 +1,14 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/content";
 import { serviceIcon } from "@/lib/service-icons";
+import { Link } from "@/i18n/navigation";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion/reveal";
 
 export async function Services() {
   const t = await getTranslations("services");
+  const locale = await getLocale();
   const services = await prisma.service.findMany({
     where: { isActive: true },
     orderBy: { order: "asc" },
@@ -32,8 +35,8 @@ export async function Services() {
             const Icon = serviceIcon(service.iconKey);
             return (
               <RevealItem key={service.id}>
-                <a
-                  href={`#contacts`}
+                <Link
+                  href={`/services/${service.slug}`}
                   className="group flex h-full flex-col bg-card p-8 transition-colors hover:bg-accent/40"
                 >
                   <div className="flex items-center justify-between">
@@ -44,9 +47,11 @@ export async function Services() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                   </div>
-                  <h3 className="mt-6 text-xl font-semibold">{service.title}</h3>
+                  <h3 className="mt-6 text-xl font-semibold">
+                    {localize(service, "title", locale)}
+                  </h3>
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
-                    {service.shortDescription}
+                    {localize(service, "shortDescription", locale)}
                   </p>
                   <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
                     {t("more")}
@@ -54,7 +59,7 @@ export async function Services() {
                       →
                     </span>
                   </span>
-                </a>
+                </Link>
               </RevealItem>
             );
           })}

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const BUDGET_RANGES = [
   "UNDER_100K",
@@ -10,7 +11,12 @@ export const BUDGET_RANGES = [
 export const applicationSchema = z.object({
   name: z.string().trim().min(2, { message: "name_min" }).max(100, { message: "name_max" }),
   email: z.string().trim().email({ message: "email_invalid" }),
-  phone: z.string().trim().max(30, { message: "phone_max" }).optional().or(z.literal("")),
+  phone: z
+    .string()
+    .trim()
+    .optional()
+    .or(z.literal(""))
+    .refine((v) => !v || isValidPhoneNumber(v), { message: "phone_invalid" }),
   company: z.string().trim().max(120, { message: "company_max" }).optional().or(z.literal("")),
   serviceId: z.string().trim().optional().or(z.literal("")),
   budgetRange: z.enum(BUDGET_RANGES).optional().or(z.literal("")),

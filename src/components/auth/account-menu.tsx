@@ -27,7 +27,7 @@ export function AccountMenu() {
   }
 
   const { user } = session;
-  const isStaff = user.role === "MANAGER" || user.role === "ADMIN";
+  const isStaff = user.role === "ADMIN";
 
   return (
     <DropdownMenu>
@@ -40,17 +40,18 @@ export function AccountMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link href="/cabinet">
-            <LayoutDashboard className="mr-2 size-4" />
-            {t("cabinet")}
-          </Link>
-        </DropdownMenuItem>
-        {isStaff && (
+        {isStaff ? (
           <DropdownMenuItem asChild>
             <Link href="/admin">
               <Shield className="mr-2 size-4" />
               {t("admin")}
+            </Link>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem asChild>
+            <Link href="/cabinet">
+              <LayoutDashboard className="mr-2 size-4" />
+              {t("cabinet")}
             </Link>
           </DropdownMenuItem>
         )}

@@ -1,17 +1,23 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/content";
 import { ApplicationForm } from "@/components/application-form";
 import { Reveal } from "@/components/motion/reveal";
 
 export async function Contact() {
   const t = await getTranslations("contact");
-  const services = await prisma.service.findMany({
+  const locale = await getLocale();
+  const rows = await prisma.service.findMany({
     where: { isActive: true },
     orderBy: { order: "asc" },
-    select: { id: true, title: true },
+    select: { id: true, title: true, titleEn: true },
   });
+  const services = rows.map((row) => ({
+    id: row.id,
+    title: localize(row, "title", locale),
+  }));
 
   return (
     <section

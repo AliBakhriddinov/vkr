@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
 import { StatusBadge } from "@/components/status-badge";
 import { StatusChangeForm } from "@/components/admin/status-change-form";
+import { SeenItem } from "@/components/admin/seen-item";
 import { Link } from "@/i18n/navigation";
 
 export default async function AdminApplicationDetail({
@@ -15,7 +16,7 @@ export default async function AdminApplicationDetail({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-  await requireRole(locale, ["MANAGER", "ADMIN"]);
+  await requireRole(locale, ["ADMIN"]);
   const t = await getTranslations("admin.applications");
   const ts = await getTranslations("status");
   const tb = await getTranslations("contact.budgets");
@@ -37,6 +38,7 @@ export default async function AdminApplicationDetail({
 
   return (
     <div className="max-w-3xl">
+      <SeenItem kind="applications" id={application.id} />
       <Link
         href="/admin/applications"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"

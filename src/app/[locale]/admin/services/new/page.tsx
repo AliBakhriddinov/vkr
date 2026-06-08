@@ -20,6 +20,7 @@ export default async function NewServicePage({
       </h1>
       <ServiceForm
         action={createService.bind(null, locale)}
+        listHref="/admin/services"
         submitLabel={tf("create")}
         pendingLabel={tf("creating")}
       />

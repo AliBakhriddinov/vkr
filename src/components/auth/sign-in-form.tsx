@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import { AlertCircle } from "lucide-react";
 
 import { signInSchema, type SignInInput } from "@/lib/validations/auth";
@@ -40,11 +40,16 @@ export function SignInForm() {
       return;
     }
     const callbackUrl = params.get("callbackUrl");
-    const safeCallback =
-      callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")
-        ? callbackUrl
-        : `/${locale}/cabinet`;
-    router.push(safeCallback);
+    if (callbackUrl && callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")) {
+      router.push(callbackUrl);
+    } else {
+      const session = await getSession();
+      const dest =
+        session?.user?.role === "CLIENT"
+          ? `/${locale}/cabinet`
+          : `/${locale}/admin`;
+      router.push(dest);
+    }
     router.refresh();
   }
 

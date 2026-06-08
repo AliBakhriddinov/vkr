@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 import { Link } from "@/i18n/navigation";
@@ -14,12 +14,14 @@ const NAV_ITEMS = [
   { key: "services", href: "#services" },
   { key: "cases", href: "#cases" },
   { key: "process", href: "#process" },
-  { key: "about", href: "#about" },
+  { key: "testimonials", href: "#testimonials" },
+  { key: "blog", href: "/blog" },
   { key: "contacts", href: "#contacts" },
 ] as const;
 
 export function Header() {
   const t = useTranslations("nav");
+  const locale = useLocale();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -39,20 +41,34 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-6">
-        <Link href="/" className="font-display text-lg font-bold tracking-tight">
+        <Link
+          href="/"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="font-display text-lg font-bold tracking-tight"
+        >
           Pixel<span className="text-primary">Wave</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">
-          {NAV_ITEMS.map((item) => (
-            <a
-              key={item.key}
-              href={item.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {t(item.key)}
-            </a>
-          ))}
+          {NAV_ITEMS.map((item) =>
+            item.href.startsWith("#") ? (
+              <a
+                key={item.key}
+                href={`/${locale}${item.href}`}
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {t(item.key)}
+              </a>
+            ) : (
+              <Link
+                key={item.key}
+                href={item.href}
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {t(item.key)}
+              </Link>
+            ),
+          )}
         </nav>
 
         <div className="flex items-center gap-1">
@@ -60,7 +76,7 @@ export function Header() {
           <ThemeToggle />
           <AccountMenu />
           <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
-            <a href="#contacts">{t("cta")}</a>
+            <a href={`/${locale}#contacts`}>{t("cta")}</a>
           </Button>
         </div>
       </div>

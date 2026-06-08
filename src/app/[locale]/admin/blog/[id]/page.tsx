@@ -25,13 +25,17 @@ export default async function EditBlogPage({
       </h1>
       <BlogForm
         action={updateBlog.bind(null, locale, id)}
+        listHref="/admin/blog"
         submitLabel={tf("save")}
         pendingLabel={tf("saving")}
         initial={{
           slug: post.slug,
           title: post.title,
+          titleEn: post.titleEn,
           excerpt: post.excerpt,
+          excerptEn: post.excerptEn,
           content: post.content,
+          contentEn: post.contentEn,
           tags: post.tags,
           publishedAt: post.publishedAt,
         }}

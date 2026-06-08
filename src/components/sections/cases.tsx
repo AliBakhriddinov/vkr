@@ -1,6 +1,8 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { prisma } from "@/lib/prisma";
+import { localize } from "@/lib/content";
+import { Link } from "@/i18n/navigation";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion/reveal";
 
 const COVERS = [
@@ -12,6 +14,7 @@ const COVERS = [
 
 export async function Cases() {
   const t = await getTranslations("cases");
+  const locale = await getLocale();
   const items = await prisma.portfolioItem.findMany({
     where: { isPublished: true },
     orderBy: { order: "asc" },
@@ -34,8 +37,8 @@ export async function Cases() {
         <RevealStagger delay={0.1} className="mt-14 grid gap-6 md:grid-cols-2">
           {items.map((item, i) => (
             <RevealItem key={item.id}>
-              <a
-                href="#contacts"
+              <Link
+                href={`/cases/${item.slug}`}
                 className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-ring hover:shadow-xl hover:shadow-primary/5"
               >
                 <div
@@ -58,9 +61,11 @@ export async function Cases() {
                       </span>
                     ))}
                   </div>
-                  <h3 className="mt-4 text-xl font-semibold">{item.title}</h3>
+                  <h3 className="mt-4 text-xl font-semibold">
+                    {localize(item, "title", locale)}
+                  </h3>
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-muted-foreground">
-                    {item.summary}
+                    {localize(item, "summary", locale)}
                   </p>
                   <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary">
                     {t("view")}
@@ -69,7 +74,7 @@ export async function Cases() {
                     </span>
                   </span>
                 </div>
-              </a>
+              </Link>
             </RevealItem>
           ))}
         </RevealStagger>

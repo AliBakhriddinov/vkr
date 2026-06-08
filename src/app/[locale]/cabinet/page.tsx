@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { requireUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { ReviewForm } from "@/components/cabinet/review-form";
 
 export async function generateMetadata({
   params,
@@ -138,6 +139,10 @@ export default async function CabinetPage({
               ))}
             </div>
           )}
+
+          <div className="mt-14 border-t border-border pt-10">
+            <ReviewForm />
+          </div>
         </section>
       </main>
       <Footer />

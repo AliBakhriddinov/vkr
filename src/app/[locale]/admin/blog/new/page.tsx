@@ -20,6 +20,7 @@ export default async function NewBlogPage({
       </h1>
       <BlogForm
         action={createBlog.bind(null, locale)}
+        listHref="/admin/blog"
         submitLabel={tf("create")}
         pendingLabel={tf("creating")}
       />

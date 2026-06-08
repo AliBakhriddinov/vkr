@@ -20,6 +20,7 @@ export default async function NewPortfolioPage({
       </h1>
       <PortfolioForm
         action={createPortfolioItem.bind(null, locale)}
+        listHref="/admin/portfolio"
         submitLabel={tf("create")}
         pendingLabel={tf("creating")}
       />

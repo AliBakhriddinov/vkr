@@ -15,7 +15,7 @@ export async function changeApplicationStatus(
   _prev: State,
   formData: FormData,
 ): Promise<State> {
-  const user = await requireRole(locale, ["MANAGER", "ADMIN"]);
+  const user = await requireRole(locale, ["ADMIN"]);
 
   const applicationId = String(formData.get("applicationId") ?? "");
   const toStatus = String(formData.get("toStatus") ?? "");

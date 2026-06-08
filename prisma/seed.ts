@@ -4,7 +4,8 @@
 // Реальных клиентов, переписки и персональных данных в наборе нет.
 //
 // Запуск: pnpm db:seed
-// Сид идемпотентен: повторный запуск не создаёт дубликатов (upsert по slug/email).
+// Сид идемпотентен: повторный запуск не плодит дубликаты — upsert по slug/email,
+// а заявки и отзывы пересоздаются через deleteMany + create.
 
 import "dotenv/config";
 import bcrypt from "bcryptjs";
@@ -30,23 +31,12 @@ async function main(): Promise<void> {
 
   const admin = await prisma.user.upsert({
     where: { email: "admin@pixelwave.test" },
-    update: {},
+    update: { seenApplicationIds: [], seenTestimonialIds: [] },
     create: {
       email: "admin@pixelwave.test",
       passwordHash: await hash("admin123"),
       name: "Администратор Иванов",
       role: UserRole.ADMIN,
-    },
-  });
-
-  const manager = await prisma.user.upsert({
-    where: { email: "manager@pixelwave.test" },
-    update: {},
-    create: {
-      email: "manager@pixelwave.test",
-      passwordHash: await hash("manager123"),
-      name: "Менеджер Петрова",
-      role: UserRole.MANAGER,
     },
   });
 
@@ -61,7 +51,7 @@ async function main(): Promise<void> {
     },
   });
 
-  console.log(`  Пользователи: ${admin.email}, ${manager.email}, ${client.email}`);
+  console.log(`  Пользователи: ${admin.email}, ${client.email}`);
 
   
   const services = [
@@ -127,11 +117,57 @@ async function main(): Promise<void> {
     },
   ];
 
+  const servicesEn: Record<
+    string,
+    { titleEn: string; shortDescriptionEn: string; fullDescriptionEn: string }
+  > = {
+    "web-development": {
+      titleEn: "Web Application Development",
+      shortDescriptionEn:
+        "Modern web applications built with Next.js, React, and TypeScript.",
+      fullDescriptionEn:
+        "Full-cycle development: architecture design, frontend and backend implementation, integration with third-party services, deployment, and ongoing maintenance. We work with Next.js, TypeScript, and PostgreSQL.",
+    },
+    "mobile-development": {
+      titleEn: "Mobile App Development",
+      shortDescriptionEn: "Cross-platform apps built with React Native.",
+      fullDescriptionEn:
+        "Building mobile apps for iOS and Android from a single codebase. A great fit for MVPs, e-commerce, and corporate services. Publishing to the App Store and Google Play is included in the price.",
+    },
+    "ui-ux-design": {
+      titleEn: "UI/UX Design",
+      shortDescriptionEn: "Interface design from research to prototypes.",
+      fullDescriptionEn:
+        "User research, information architecture, prototyping in Figma, design systems, and usability testing. We hand off ready-to-use, component-based mockups to designers and developers.",
+    },
+    seo: {
+      titleEn: "SEO",
+      shortDescriptionEn:
+        "Technical audits and content strategy to grow organic traffic.",
+      fullDescriptionEn:
+        "Technical SEO audits, page speed optimization, site structure refinement, content strategy, and link profile management. Monthly reports with measurable metrics.",
+    },
+    ads: {
+      titleEn: "Paid Search Advertising",
+      shortDescriptionEn:
+        "Launch and management of ad campaigns on Google Ads and Yandex Direct.",
+      fullDescriptionEn:
+        "Market analysis, keyword research, ad creation, A/B testing, and optimization of bids and audiences. Transparent reporting focused on cost per conversion.",
+    },
+    support: {
+      titleEn: "Technical Support",
+      shortDescriptionEn:
+        "Monitoring, updates, incident response, and ongoing development of existing web projects.",
+      fullDescriptionEn:
+        "Around-the-clock monitoring, regular dependency updates, SLA-based incident response, and planned feature development. Ideal for projects that are already live.",
+    },
+  };
   for (const s of services) {
+    const data = { ...s, ...servicesEn[s.slug] };
     await prisma.service.upsert({
       where: { slug: s.slug },
-      update: s,
-      create: { ...s, isActive: true },
+      update: data,
+      create: { ...data, isActive: true },
     });
   }
   console.log(`  Услуг: ${services.length}`);
@@ -181,11 +217,41 @@ async function main(): Promise<void> {
     },
   ];
 
+  const portfolioEn: Record<
+    string,
+    { titleEn: string; summaryEn: string; descriptionEn: string; clientNameEn: string }
+  > = {
+    "severnyy-put": {
+      titleEn: "Severny Put Online Store",
+      summaryEn:
+        "A B2C marketplace for outdoor gear with integrated payments and logistics.",
+      descriptionEn:
+        "We built an online store with a catalog of 12,000 SKU, a shopping cart, multi-step checkout, and integrations with payment acquiring and delivery services. We implemented sales-funnel analytics and an admin panel for order management.",
+      clientNameEn: "Severny Put LLC",
+    },
+    arktiktech: {
+      titleEn: "ArkticTech Corporate Website",
+      summaryEn:
+        "A company website for a manufacturer with a multilingual product catalog.",
+      descriptionEn:
+        "We created a website with a Russian and English interface, a product catalog of 80 items, and a quote request form. Content is managed through a headless CMS, allowing the marketing team to update pages without involving developers.",
+      clientNameEn: "ArkticTech JSC",
+    },
+    gocity: {
+      titleEn: "GoCity Mobile App",
+      summaryEn:
+        "A city app for paying for transit, finding parking, and accessing municipal services.",
+      descriptionEn:
+        "We developed an app for iOS and Android serving ~50,000 active users. We implemented QR-based fare payment, parking-spot search, push notifications about city events, and a feedback channel with the municipality.",
+      clientNameEn: "City Administration",
+    },
+  };
   for (const p of portfolio) {
+    const data = { ...p, ...portfolioEn[p.slug] };
     await prisma.portfolioItem.upsert({
       where: { slug: p.slug },
-      update: p,
-      create: { ...p, isPublished: true },
+      update: data,
+      create: { ...data, isPublished: true },
     });
   }
   console.log(`  Кейсов портфолио: ${portfolio.length}`);
@@ -224,20 +290,116 @@ async function main(): Promise<void> {
     },
   ];
 
+  const postsEn: Record<
+    string,
+    { titleEn: string; excerptEn: string; contentEn: string }
+  > = {
+    "delivery-in-6-weeks": {
+      titleEn: "How We Build Web Apps in 6 Weeks",
+      excerptEn:
+        "We share the methodology, tools, and checkpoints that let us launch an MVP in six weeks without compromising on quality.",
+      contentEn:
+        "## Introduction\n\nThe typical timeline for building an MVP is 3-4 months. We're able to do it in 6 weeks thanks to strict scope management, a library of ready-made components, and automated deployment...\n\n## Checkpoints\n\n1. Week 1: research and prototype\n2. Weeks 2-3: database schema and API\n3. Weeks 4-5: UI and integrations\n4. Week 6: testing and launch",
+    },
+    "5-mistakes-choosing-contractor": {
+      titleEn: "5 Mistakes to Avoid When Choosing a Development Contractor",
+      excerptEn:
+        "What to check before signing a contract so you don't end up with an unfinished product and an inflated bill.",
+      contentEn:
+        "## 1. No clear scope of work\n\nIf a contractor is ready to start without a detailed brief, that's a red flag.\n\n## 2. Fixed price without a fixed scope\n\n## 3. No interim demos\n\n## 4. Closed source code\n\n## 5. No documentation",
+    },
+    "headless-cms-vs-wordpress-2026": {
+      titleEn: "Headless CMS vs WordPress: What to Choose in 2026",
+      excerptEn:
+        "We compare the two approaches on performance, total cost of ownership, and ease of content editing.",
+      contentEn:
+        'In 2026, choosing a CMS no longer comes down to "just go with WordPress by default." Headless solutions (Sanity, Strapi, Payload) win out on speed and scalability...',
+    },
+  };
   for (const post of posts) {
+    const data = { ...post, ...postsEn[post.slug] };
     await prisma.blogPost.upsert({
       where: { slug: post.slug },
-      update: post,
-      create: { ...post, authorId: admin.id },
+      update: data,
+      create: { ...data, authorId: admin.id },
     });
   }
   console.log(`  Публикаций блога: ${posts.length}`);
+
+  await prisma.testimonial.deleteMany();
+  const testimonials = [
+    {
+      quote:
+        "Команда PixelWave перезапустила наш интернет-магазин и за квартал конверсия выросла на 38%. Работали прозрачно, в срок.",
+      authorName: "Елена Воронцова",
+      authorRole: "Директор по маркетингу, «Северный путь»",
+      order: 1,
+    },
+    {
+      quote:
+        "Сделали корпоративный портал с личным кабинетом. Отдельно отмечу качество кода и документации — поддерживать легко.",
+      authorName: "Дмитрий Лазарев",
+      authorRole: "CTO, «Дельта Лаб»",
+      order: 2,
+    },
+    {
+      quote:
+        "Запустили мобильное приложение за полтора месяца. Команда держала сроки и предлагала решения, а не просто выполняла задачи.",
+      authorName: "Марина Котова",
+      authorRole: "Продакт-менеджер, «GoCity»",
+      order: 3,
+    },
+    {
+      quote:
+        "Перевели сайт на современный стек и настроили аналитику. Скорость загрузки выросла вдвое, заявок стало заметно больше.",
+      authorName: "Артём Белов",
+      authorRole: "Основатель, студия «Лес»",
+      order: 4,
+    },
+  ];
+  const testimonialsEn: Record<
+    number,
+    { quoteEn: string; authorNameEn: string; authorRoleEn: string }
+  > = {
+    1: {
+      authorNameEn: "Elena Vorontsova",
+      authorRoleEn: "Marketing Director, Severny Put",
+      quoteEn:
+        "The PixelWave team relaunched our online store, and within a quarter our conversion rate grew by 38%. They worked transparently and on time.",
+    },
+    2: {
+      authorNameEn: "Dmitry Lazarev",
+      authorRoleEn: "CTO, Delta Lab",
+      quoteEn:
+        "They built us a corporate portal with a client area. I'd especially highlight the quality of the code and documentation — it's easy to maintain.",
+    },
+    3: {
+      authorNameEn: "Marina Kotova",
+      authorRoleEn: "Product Manager, GoCity",
+      quoteEn:
+        "They launched our mobile app in six weeks. The team kept to the schedule and proposed solutions rather than just ticking off tasks.",
+    },
+    4: {
+      authorNameEn: "Artem Belov",
+      authorRoleEn: "Founder, Les Studio",
+      quoteEn:
+        "They moved our site to a modern stack and set up analytics. Load speed doubled, and we're getting noticeably more leads.",
+    },
+  };
+  for (const item of testimonials) {
+    await prisma.testimonial.create({
+      data: { ...item, ...testimonialsEn[item.order] },
+    });
+  }
+  console.log(`  Отзывов: ${testimonials.length}`);
 
 
   // Чистим заявки и историю перед перезаливом — иначе при повторных запусках
   // будут множиться записи (заявки не имеют natural unique ключа).
   await prisma.applicationStatusChange.deleteMany();
   await prisma.application.deleteMany();
+  // Роль менеджера упразднена — заявки ведёт администратор.
+  await prisma.user.deleteMany({ where: { email: "manager@pixelwave.test" } });
 
   // Заявка 1: анонимная, новая
   await prisma.application.create({
@@ -266,20 +428,20 @@ async function main(): Promise<void> {
       managerComment: "Связался, ждём бриф. Назначен звонок на следующую неделю.",
       userId: client.id,
       serviceId: webDev.id,
-      assignedManagerId: manager.id,
+      assignedManagerId: admin.id,
       statusHistory: {
         create: [
           {
             fromStatus: null,
             toStatus: ApplicationStatus.NEW,
-            changedById: manager.id,
+            changedById: admin.id,
             comment: "Заявка зарегистрирована автоматически.",
             changedAt: new Date("2026-05-15T10:30:00Z"),
           },
           {
             fromStatus: ApplicationStatus.NEW,
             toStatus: ApplicationStatus.IN_PROGRESS,
-            changedById: manager.id,
+            changedById: admin.id,
             comment: "Связался с клиентом, договорились о созвоне.",
             changedAt: new Date("2026-05-16T14:15:00Z"),
           },
@@ -299,26 +461,26 @@ async function main(): Promise<void> {
       managerComment: "Аудит выполнен, отчёт отправлен на email. Клиент перешёл на абонентское обслуживание.",
       userId: client.id,
       serviceId: seo.id,
-      assignedManagerId: manager.id,
+      assignedManagerId: admin.id,
       statusHistory: {
         create: [
           {
             fromStatus: null,
             toStatus: ApplicationStatus.NEW,
-            changedById: manager.id,
+            changedById: admin.id,
             changedAt: new Date("2026-04-10T09:00:00Z"),
           },
           {
             fromStatus: ApplicationStatus.NEW,
             toStatus: ApplicationStatus.IN_PROGRESS,
-            changedById: manager.id,
+            changedById: admin.id,
             comment: "Начали аудит.",
             changedAt: new Date("2026-04-11T11:30:00Z"),
           },
           {
             fromStatus: ApplicationStatus.IN_PROGRESS,
             toStatus: ApplicationStatus.DONE,
-            changedById: manager.id,
+            changedById: admin.id,
             comment: "Отчёт по аудиту отправлен.",
             changedAt: new Date("2026-04-25T16:00:00Z"),
           },
@@ -350,19 +512,19 @@ async function main(): Promise<void> {
       message: "Нужна разработка десктопного бухгалтерского ПО под Windows.",
       status: ApplicationStatus.REJECTED,
       managerComment: "Не наш профиль (десктоп, бухучёт). Передал контакт партнёру.",
-      assignedManagerId: manager.id,
+      assignedManagerId: admin.id,
       statusHistory: {
         create: [
           {
             fromStatus: null,
             toStatus: ApplicationStatus.NEW,
-            changedById: manager.id,
+            changedById: admin.id,
             changedAt: new Date("2026-05-20T13:00:00Z"),
           },
           {
             fromStatus: ApplicationStatus.NEW,
             toStatus: ApplicationStatus.REJECTED,
-            changedById: manager.id,
+            changedById: admin.id,
             comment: "Не профильная задача.",
             changedAt: new Date("2026-05-20T13:45:00Z"),
           },

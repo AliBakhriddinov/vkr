@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -15,6 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { PhoneField } from "@/components/ui/phone-field";
 
 type ServiceOption = { id: string; title: string };
 type Status = "idle" | "success" | "error";
@@ -27,11 +35,13 @@ export function ApplicationForm({ services }: { services: ServiceOption[] }) {
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<ApplicationInput>({
     resolver: zodResolver(applicationSchema),
+    defaultValues: { phone: "", serviceId: "", budgetRange: "" },
   });
 
   async function onSubmit(values: ApplicationInput) {
@@ -95,10 +105,17 @@ export function ApplicationForm({ services }: { services: ServiceOption[] }) {
         </Field>
 
         <Field label={`${t("phone")} · ${t("optional")}`} error={err("phone")}>
-          <Input
-            {...register("phone")}
-            placeholder={t("phonePlaceholder")}
-            aria-invalid={!!errors.phone}
+          <Controller
+            name="phone"
+            control={control}
+            render={({ field }) => (
+              <PhoneField
+                value={field.value || undefined}
+                onChange={(v) => field.onChange(v ?? "")}
+                placeholder={t("phonePlaceholder")}
+                invalid={!!errors.phone}
+              />
+            )}
           />
         </Field>
 
@@ -114,33 +131,53 @@ export function ApplicationForm({ services }: { services: ServiceOption[] }) {
         </Field>
 
         <Field label={`${t("service")} · ${t("optional")}`}>
-          <select
-            {...register("serviceId")}
-            className="h-11 w-full rounded-md border border-input bg-background px-3.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
-            defaultValue=""
-          >
-            <option value="">{t("servicePlaceholder")}</option>
-            {services.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.title}
-              </option>
-            ))}
-          </select>
+          <Controller
+            name="serviceId"
+            control={control}
+            render={({ field }) => (
+              <Select
+                value={field.value || "none"}
+                onValueChange={(v) => field.onChange(v === "none" ? "" : v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("servicePlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t("servicePlaceholder")}</SelectItem>
+                  {services.map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
         </Field>
 
         <Field label={`${t("budget")} · ${t("optional")}`}>
-          <select
-            {...register("budgetRange")}
-            className="h-11 w-full rounded-md border border-input bg-background px-3.5 text-sm outline-none transition-colors focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/40"
-            defaultValue=""
-          >
-            <option value="">{t("budgetPlaceholder")}</option>
-            {BUDGET_RANGES.map((b) => (
-              <option key={b} value={b}>
-                {tb(b)}
-              </option>
-            ))}
-          </select>
+          <Controller
+            name="budgetRange"
+            control={control}
+            render={({ field }) => (
+              <Select
+                value={field.value || "none"}
+                onValueChange={(v) => field.onChange(v === "none" ? "" : v)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t("budgetPlaceholder")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">{t("budgetPlaceholder")}</SelectItem>
+                  {BUDGET_RANGES.map((b) => (
+                    <SelectItem key={b} value={b}>
+                      {tb(b)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          />
         </Field>
       </div>
 

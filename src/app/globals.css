@@ -5,6 +5,7 @@
 
 :root {
   --radius: 0.75rem;
+  color-scheme: light;
 
   --background: #f7f8fa;
   --foreground: #10131a;
@@ -31,6 +32,8 @@
 }
 
 .dark {
+  color-scheme: dark;
+
   --background: #0b0e14;
   --foreground: #e8ebf2;
   --card: #161d29;
@@ -113,4 +116,11 @@
 @utility dotgrid {
   background-image: radial-gradient(var(--border) 1px, transparent 1px);
   background-size: 22px 22px;
+}
+
+/* Список стран в поле телефона — читаемые цвета в обеих темах */
+.PhoneInputCountrySelect,
+.PhoneInputCountrySelect option {
+  background-color: var(--popover);
+  color: var(--popover-foreground);
 }

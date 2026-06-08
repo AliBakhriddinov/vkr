@@ -25,14 +25,19 @@ export default async function EditPortfolioPage({
       </h1>
       <PortfolioForm
         action={updatePortfolioItem.bind(null, locale, id)}
+        listHref="/admin/portfolio"
         submitLabel={tf("save")}
         pendingLabel={tf("saving")}
         initial={{
           slug: item.slug,
           title: item.title,
+          titleEn: item.titleEn,
           summary: item.summary,
+          summaryEn: item.summaryEn,
           description: item.description,
+          descriptionEn: item.descriptionEn,
           clientName: item.clientName,
+          clientNameEn: item.clientNameEn,
           projectUrl: item.projectUrl,
           technologies: item.technologies,
           completedAt: item.completedAt,

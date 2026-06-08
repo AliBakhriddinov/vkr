@@ -1,33 +1,36 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
 import { portfolioSchema } from "@/lib/validations/portfolio";
 
-type State = { error?: string };
+type Result = { ok: true } | { ok: false; error: string };
 
-function parse(formData: FormData) {
-  const clientName = String(formData.get("clientName") ?? "").trim();
-  const projectUrl = String(formData.get("projectUrl") ?? "").trim();
-  const technologies = String(formData.get("technologies") ?? "");
-  const completedAt = String(formData.get("completedAt") ?? "").trim();
+function parse(v: Record<string, unknown>) {
+  const clientName = String(v.clientName ?? "").trim();
+  const projectUrl = String(v.projectUrl ?? "").trim();
+  const technologies = String(v.technologies ?? "");
+  const completedAt = String(v.completedAt ?? "").trim();
   return {
-    slug: String(formData.get("slug") ?? "").trim(),
-    title: String(formData.get("title") ?? "").trim(),
-    summary: String(formData.get("summary") ?? "").trim(),
-    description: String(formData.get("description") ?? "").trim(),
+    slug: String(v.slug ?? "").trim(),
+    title: String(v.title ?? "").trim(),
+    titleEn: String(v.titleEn ?? "").trim() || null,
+    summary: String(v.summary ?? "").trim(),
+    summaryEn: String(v.summaryEn ?? "").trim() || null,
+    description: String(v.description ?? "").trim(),
+    descriptionEn: String(v.descriptionEn ?? "").trim() || null,
     clientName: clientName || undefined,
+    clientNameEn: String(v.clientNameEn ?? "").trim() || null,
     projectUrl: projectUrl || undefined,
     technologies: technologies
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean),
     completedAt: completedAt ? new Date(completedAt) : null,
-    order: Number(formData.get("order") ?? 0) || 0,
-    isPublished: formData.get("isPublished") === "on",
+    order: Number(v.order ?? 0) || 0,
+    isPublished: v.isPublished === true || v.isPublished === "on",
   };
 }
 
@@ -42,46 +45,56 @@ function isUnique(e: unknown) {
 
 export async function createPortfolioItem(
   locale: string,
-  _prev: State,
-  formData: FormData,
-): Promise<State> {
-  await requireRole(locale, ["MANAGER", "ADMIN"]);
-  const parsed = portfolioSchema.safeParse(parse(formData));
-  if (!parsed.success) return { error: "invalid" };
+  values: Record<string, unknown>,
+): Promise<Result> {
+  await requireRole(locale, ["ADMIN"]);
+  const parsed = portfolioSchema.safeParse(parse(values));
+  if (!parsed.success) return { ok: false, error: "invalid" };
   try {
     await prisma.portfolioItem.create({ data: parsed.data });
   } catch (e) {
-    if (isUnique(e)) return { error: "slug_taken" };
+    if (isUnique(e)) return { ok: false, error: "slug_taken" };
     throw e;
   }
   revalidatePath(`/${locale}/admin/portfolio`);
-  redirect(`/${locale}/admin/portfolio`);
+  return { ok: true };
 }
 
 export async function updatePortfolioItem(
   locale: string,
   id: string,
-  _prev: State,
-  formData: FormData,
-): Promise<State> {
-  await requireRole(locale, ["MANAGER", "ADMIN"]);
-  const parsed = portfolioSchema.safeParse(parse(formData));
-  if (!parsed.success) return { error: "invalid" };
+  values: Record<string, unknown>,
+): Promise<Result> {
+  await requireRole(locale, ["ADMIN"]);
+  const parsed = portfolioSchema.safeParse(parse(values));
+  if (!parsed.success) return { ok: false, error: "invalid" };
   try {
     await prisma.portfolioItem.update({ where: { id }, data: parsed.data });
   } catch (e) {
-    if (isUnique(e)) return { error: "slug_taken" };
+    if (isUnique(e)) return { ok: false, error: "slug_taken" };
     throw e;
   }
   revalidatePath(`/${locale}/admin/portfolio`);
-  redirect(`/${locale}/admin/portfolio`);
+  return { ok: true };
 }
 
 export async function deletePortfolioItem(
   locale: string,
   id: string,
 ): Promise<void> {
-  await requireRole(locale, ["MANAGER", "ADMIN"]);
+  await requireRole(locale, ["ADMIN"]);
   await prisma.portfolioItem.delete({ where: { id } });
+  const rest = await prisma.portfolioItem.findMany({
+    orderBy: { order: "asc" },
+    select: { id: true },
+  });
+  await prisma.$transaction(
+    rest.map((row, i) =>
+      prisma.portfolioItem.update({
+        where: { id: row.id },
+        data: { order: i + 1 },
+      }),
+    ),
+  );
   revalidatePath(`/${locale}/admin/portfolio`);
 }

@@ -1,9 +1,11 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
+import { DeleteWithUndo } from "@/components/admin/delete-with-undo";
 import { deletePortfolioItem } from "@/lib/actions/portfolio";
 
 export default async function AdminPortfolioPage({
@@ -13,6 +15,7 @@ export default async function AdminPortfolioPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
+  await requireRole(locale, ["ADMIN"]);
   const t = await getTranslations("admin.portfolio");
   const tf = await getTranslations("admin.form");
 
@@ -64,17 +67,10 @@ export default async function AdminPortfolioPage({
                         <Pencil className="size-4" />
                       </Link>
                     </Button>
-                    <form action={deletePortfolioItem.bind(null, locale, i.id)}>
-                      <Button
-                        type="submit"
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive hover:text-destructive"
-                        aria-label="delete"
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </form>
+                    <DeleteWithUndo
+                      action={deletePortfolioItem.bind(null, locale, i.id)}
+                      name={i.title}
+                    />
                   </div>
                 </td>
               </tr>
