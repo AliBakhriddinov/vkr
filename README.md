@@ -12,6 +12,7 @@
 - **Личный кабинет клиента:** регистрация и аутентификация, отправка заявок, отслеживание статусов и истории обращений.
 - **Административная панель:** обработка входящих заявок администратором, управление каталогом услуг, портфолио и публикациями блога, ролевой доступ.
 - **Серверная часть:** API на основе серверных маршрутов Next.js, работа с PostgreSQL через Prisma ORM, валидация входных данных.
+- **Интернационализация и оформление:** двуязычный интерфейс (русский / английский), светлая и тёмная темы.
 
 ## Стек технологий
 
@@ -86,7 +87,7 @@ docker compose --profile prod up --build
 ├── prisma/
 │   └── schema.prisma     # схема базы данных
 ├── public/               # статика
-├── tests/                # юнит и интеграционные тесты
+├── tests/                # юнит-тесты (Vitest) и e2e-тесты (Playwright)
 ├── Dockerfile            # multi-stage сборка приложения
 ├── docker-compose.yml    # PostgreSQL + опциональный сервис app
 ├── package.json          # зависимости и pnpm-скрипты
@@ -105,12 +106,32 @@ docker compose --profile prod up --build
 | `pnpm format` | Форматирование Prettier |
 | `pnpm format:check` | Проверка форматирования без изменений |
 | `pnpm typecheck` | Проверка типов TypeScript |
+| `pnpm test` | Юнит-тесты (Vitest) |
+| `pnpm test:watch` | Юнит-тесты в режиме наблюдения |
+| `pnpm test:e2e` | End-to-end тесты (Playwright) |
 | `pnpm db:push` | Синхронизация схемы Prisma с БД без миграций (dev) |
 | `pnpm db:migrate` | Создание и применение миграции |
 | `pnpm db:deploy` | Применение миграций в production |
 | `pnpm db:generate` | Генерация Prisma client |
 | `pnpm db:studio` | Web-UI для просмотра БД |
 | `pnpm db:seed` | Загрузка тестовых данных |
+
+## Тестирование
+
+Проект покрыт двумя видами тестов:
+
+- **Юнит-тесты (Vitest)** — валидация форм (Zod-схемы), логика смены статуса заявки, локализация контента. Базы данных не требуют.
+- **E2E-тесты (Playwright)** — ключевые пользовательские сценарии: вход, отправка заявки, смена статуса в админ-панели, переключение языка, отзыв клиента.
+
+```bash
+# Юнит-тесты
+pnpm test
+
+# E2E (нужны поднятая БД и демо-данные; dev-сервер Playwright запускает сам)
+docker compose up -d db
+pnpm db:seed
+pnpm test:e2e
+```
 
 ## Переменные окружения
 
@@ -119,6 +140,24 @@ docker compose --profile prod up --build
 | Переменная | Назначение | Пример |
 |------------|------------|--------|
 | `DATABASE_URL` | Строка подключения к PostgreSQL | `postgresql://ali:ali@localhost:5432/ali?schema=public` |
+| `AUTH_SECRET` | Секрет для подписи сессий Auth.js | случайная строка (см. `.env.example`) |
+| `AUTH_TRUST_HOST` | Доверие host-заголовку (за прокси / на Vercel) | `true` |
+
+## Деплой
+
+Приложение разворачивается на **Vercel** с облачным **PostgreSQL** (Neon):
+
+1. Импортировать репозиторий в Vercel — фреймворк Next.js определяется автоматически.
+2. Подключить базу Neon через интеграцию Vercel Storage — она пропишет `DATABASE_URL`.
+3. Добавить переменные `AUTH_SECRET` и `AUTH_TRUST_HOST=true`.
+4. Применить миграции и загрузить данные, используя прямое (unpooled) подключение к БД:
+
+```bash
+DATABASE_URL="<direct-connection-url>" pnpm db:deploy
+DATABASE_URL="<direct-connection-url>" pnpm db:seed
+```
+
+Скрипт `postinstall` генерирует Prisma client при установке зависимостей, поэтому сборка на Vercel проходит без дополнительных шагов.
 
 ## Лицензия
 
