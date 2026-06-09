@@ -5,8 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
 import type { ApplicationStatus } from "@/generated/prisma/enums";
-
-const STATUSES = ["NEW", "IN_PROGRESS", "DONE", "REJECTED"] as const;
+import { decideStatusChange, isApplicationStatus } from "@/lib/applications/status";
 
 type State = { error?: string };
 
@@ -21,7 +20,7 @@ export async function changeApplicationStatus(
   const toStatus = String(formData.get("toStatus") ?? "");
   const comment = String(formData.get("comment") ?? "").trim();
 
-  if (!applicationId || !STATUSES.includes(toStatus as ApplicationStatus)) {
+  if (!applicationId || !isApplicationStatus(toStatus)) {
     return { error: "invalid" };
   }
 
@@ -29,11 +28,15 @@ export async function changeApplicationStatus(
     where: { id: applicationId },
     select: { status: true },
   });
-  if (!application) return { error: "invalid" };
 
-  const next = toStatus as ApplicationStatus;
+  const decision = decideStatusChange(application?.status ?? null, toStatus, comment);
 
-  if (application.status !== next) {
+  if (decision.kind === "invalid_status" || decision.kind === "not_found") {
+    return { error: "invalid" };
+  }
+
+  if (decision.kind === "transition") {
+    const next = decision.to as ApplicationStatus;
     // Читаем статус внутри транзакции, чтобы fromStatus в истории отражал
     // реальное значение на момент записи (защита от гонки двух менеджеров).
     await prisma.$transaction(async (tx) => {
@@ -60,7 +63,7 @@ export async function changeApplicationStatus(
         },
       });
     });
-  } else if (comment) {
+  } else if (decision.kind === "comment_only") {
     await prisma.application.update({
       where: { id: applicationId },
       data: { managerComment: comment },
