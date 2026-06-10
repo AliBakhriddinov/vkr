@@ -12,11 +12,11 @@ import { AccountMenu } from "@/components/auth/account-menu";
 
 const NAV_ITEMS = [
   { key: "services", href: "#services" },
-  { key: "cases", href: "#cases" },
   { key: "process", href: "#process" },
+  { key: "cases", href: "#cases" },
   { key: "testimonials", href: "#testimonials" },
-  { key: "blog", href: "/blog" },
   { key: "contacts", href: "#contacts" },
+  { key: "blog", href: "/blog" },
 ] as const;
 
 export function Header() {
@@ -44,7 +44,7 @@ export function Header() {
         <Link
           href="/"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="font-display text-lg font-bold tracking-tight"
+          className="font-display text-lg font-bold tracking-tight text-logo"
         >
           Pixel<span className="text-primary">Wave</span>
         </Link>
@@ -74,10 +74,15 @@ export function Header() {
         <div className="flex items-center gap-1">
           <LocaleSwitcher />
           <ThemeToggle />
-          <AccountMenu />
-          <Button asChild size="sm" className="ml-2 hidden sm:inline-flex">
+          <Button
+            asChild
+            variant="secondary"
+            size="sm"
+            className="ml-2 hidden sm:inline-flex"
+          >
             <a href={`/${locale}#contacts`}>{t("cta")}</a>
           </Button>
+          <AccountMenu />
         </div>
       </div>
     </header>

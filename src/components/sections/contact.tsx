@@ -84,10 +84,10 @@ export async function Contact() {
                 {t("authRequired.text")}
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Button asChild>
+                <Button asChild variant="secondary">
                   <Link href="/sign-up">{t("authRequired.signUp")}</Link>
                 </Button>
-                <Button asChild variant="outline">
+                <Button asChild>
                   <Link href="/sign-in">{t("authRequired.signIn")}</Link>
                 </Button>
               </div>

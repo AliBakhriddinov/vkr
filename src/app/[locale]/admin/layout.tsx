@@ -42,7 +42,7 @@ export default async function AdminLayout({
           <div className="flex items-baseline gap-2">
             <Link
               href="/"
-              className="font-display text-lg font-bold tracking-tight"
+              className="font-display text-lg font-bold tracking-tight text-logo"
             >
               Pixel<span className="text-primary">Wave</span>
             </Link>

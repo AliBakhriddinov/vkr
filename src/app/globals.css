@@ -29,6 +29,8 @@
 
   --teal: #0e7c8c;
   --teal-foreground: #ffffff;
+
+  --logo: #1d2a7a;
 }
 
 .dark {
@@ -56,6 +58,8 @@
 
   --teal: #54c9d8;
   --teal-foreground: #0b0e14;
+
+  --logo: #e8ebf2;
 }
 
 @theme inline {
@@ -80,6 +84,7 @@
   --color-ring: var(--ring);
   --color-teal: var(--teal);
   --color-teal-foreground: var(--teal-foreground);
+  --color-logo: var(--logo);
 
   --font-display: var(--font-unbounded);
   --font-sans: var(--font-manrope);

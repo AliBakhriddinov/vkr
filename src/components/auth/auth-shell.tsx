@@ -6,7 +6,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="flex h-16 items-center justify-between px-6">
-        <Link href="/" className="font-display text-lg font-bold tracking-tight">
+        <Link href="/" className="font-display text-lg font-bold tracking-tight text-logo">
           Pixel<span className="text-primary">Wave</span>
         </Link>
         <div className="flex items-center gap-1">

@@ -4,11 +4,11 @@ import { Link } from "@/i18n/navigation";
 
 const NAV_ITEMS = [
   { key: "services", href: "#services" },
-  { key: "cases", href: "#cases" },
   { key: "process", href: "#process" },
+  { key: "cases", href: "#cases" },
   { key: "testimonials", href: "#testimonials" },
-  { key: "blog", href: "/blog" },
   { key: "contacts", href: "#contacts" },
+  { key: "blog", href: "/blog" },
 ] as const;
 
 export function Footer() {
@@ -21,7 +21,7 @@ export function Footer() {
     <footer className="mt-auto border-t border-border bg-card">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-[2fr_1fr_1fr]">
         <div className="max-w-sm">
-          <Link href="/" className="font-display text-lg font-bold tracking-tight">
+          <Link href="/" className="font-display text-lg font-bold tracking-tight text-logo">
             Pixel<span className="text-primary">Wave</span>
           </Link>
           <p className="mt-4 text-sm leading-relaxed text-muted-foreground">

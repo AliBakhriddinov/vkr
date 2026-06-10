@@ -20,7 +20,7 @@ export function AccountMenu() {
 
   if (status !== "authenticated") {
     return (
-      <Button asChild variant="ghost" size="sm">
+      <Button asChild variant="default" size="sm">
         <Link href="/sign-in">{t("signIn")}</Link>
       </Button>
     );
