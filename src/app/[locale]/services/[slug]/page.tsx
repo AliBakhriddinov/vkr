@@ -42,7 +42,7 @@ export default async function ServiceDetailPage({
     <>
       <Header />
       <main className="flex-1">
-        <article className="mx-auto max-w-3xl px-6 py-16">
+        <article className="mx-auto my-16 max-w-3xl rounded-2xl border border-border bg-card px-6 py-12 sm:px-12">
           <a
             href={`/${locale}#services`}
             className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"

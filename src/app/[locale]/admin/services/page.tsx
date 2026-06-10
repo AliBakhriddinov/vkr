@@ -34,7 +34,7 @@ export default async function AdminServicesPage({
         </Button>
       </div>
 
-      <div className="mt-6 overflow-x-auto rounded-xl border border-border">
+      <div className="mt-6 overflow-x-auto rounded-xl border border-border bg-card">
         <table className="w-full text-sm">
           <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
             <tr>
