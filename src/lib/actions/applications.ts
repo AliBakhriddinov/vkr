@@ -64,9 +64,27 @@ export async function changeApplicationStatus(
       });
     });
   } else if (decision.kind === "comment_only") {
-    await prisma.application.update({
-      where: { id: applicationId },
-      data: { managerComment: comment },
+    // Комментарий без смены статуса тоже попадает в историю обращения:
+    // запись фиксирует текущий статус как исходный и новый.
+    await prisma.$transaction(async (tx) => {
+      const current = await tx.application.findUnique({
+        where: { id: applicationId },
+        select: { status: true },
+      });
+      if (!current) return;
+      await tx.application.update({
+        where: { id: applicationId },
+        data: { managerComment: comment },
+      });
+      await tx.applicationStatusChange.create({
+        data: {
+          applicationId,
+          fromStatus: current.status,
+          toStatus: current.status,
+          changedById: user.id,
+          comment,
+        },
+      });
     });
   }
 
