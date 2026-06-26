@@ -69,7 +69,7 @@ export function Footer() {
                 hello@pixelwave.dev
               </a>
             </li>
-            <li className="tabular-nums">+7 495 000-00-00</li>
+            <li className="tabular-nums">+7 423 000-00-00</li>
             <li className="text-muted-foreground">Россия · Владивосток</li>
           </ul>
         </div>

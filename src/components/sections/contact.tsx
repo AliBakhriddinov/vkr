@@ -53,7 +53,7 @@ export async function Contact() {
               </a>
             </ContactItem>
             <ContactItem icon={<Phone className="size-5" />} label={t("phone")}>
-              <span className="tabular-nums">+7 495 000-00-00</span>
+              <span className="tabular-nums">+7 423 000-00-00</span>
             </ContactItem>
             <ContactItem icon={<MapPin className="size-5" />} label={t("address")}>
               {t("addressValue")}
